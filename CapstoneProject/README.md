@@ -47,7 +47,9 @@ What did your research find?
 
 #### Outline of project
 - Program to generate synthetic ACH file
-  
+https://github.com/rgadicharla/MLPortfolio/blob/main/CapstoneProject/SampleACHFileGenerator.ipynb
+
 - Source program used for analysis
+https://github.com/rgadicharla/MLPortfolio/blob/main/CapstoneProject/CapstoneProject_FirstDraft.ipynb
 
 ##### Contact and Further Information
