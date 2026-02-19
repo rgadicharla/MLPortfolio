@@ -46,7 +46,8 @@ What did your research find?
 
 
 #### Outline of project
-- Program to generate synthetic ACH file  
+- Program to generate synthetic ACH file
+  
 - Source program used for analysis
 
 ##### Contact and Further Information
