@@ -1,4 +1,5 @@
 ### Project Title
+Behavioral Clustering for ACH Transaction Consolidation
 
 **Author**
 Ramya Gadicharla
@@ -7,49 +8,76 @@ Ramya Gadicharla
 This project explores whether a single consolidated ACH file can be created that preserves all essential transaction scenarios while eliminating redundancy. By applying clustering, classification, and dimensionality reduction techniques, the goal is to produce a NACHA‑compliant file that represents the full diversity of ACH activity. The consolidated file will streamline validation of ACH processing systems, reduce manual effort, and improve confidence in system reliability
 
 #### Rationale
-Why should anyone care about this question?
 ACH testing today often requires executing hundreds of separate files, many of which contain repetitive or overlapping scenarios. This leads to wasted time, higher operational costs, and difficulty ensuring complete validation. Without addressing this inefficiency, organizations risk incomplete testing, missed defects, and delays in system updates. A single consolidated file that captures the diversity of ACH activity will:
 - Streamline testing cycles
 - Reduce manual effort and redundancy
 - Improve defect detection and compliance validation
-- Enhance confidence in system reliabilit
+- Enhance confidence in system reliability
 
 #### Research Question
-What are you trying to answer?
 Can we create a single consolidated ACH file that preserves all essential transaction scenarios while eliminating redundancy, enabling efficient and comprehensive validation of ACH processing systems?
 
 #### Data Sources
-What data will you use to answer you question?
-- For initial testing, I am using a program to generate ACH files
-- NACHA format guides and documentation for validating structure, totals, and compliance rules
-- In addition to this, I will be using pblicly available sample ACH files from developer libraries
-
+- To answer this question, the project uses:
+- A custom synthetic ACH file generator that produces structurally valid NACHA records for controlled experimentation
+- NACHA format guides and official documentation to validate record structure, totals, and compliance rules
 
 #### Methodology
-- Clustering (K‑Means): Group similar ACH records by transaction type, batch attributes, and key fields to identify redundancy and select representative samples.
-- Classification (Logistic Regression): Label transactions accurately across categories (PPD, CCD, WEB, debit vs credit, routing groups) to ensure coverage of all classes.
-- Dimensionality Reduction (PCA): Visualize variation across ACH files and confirm that the consolidated file captures the full diversity of scenarios
+1. Data Preparation
+- Loaded and cleaned the full ACH dataset.
+- Selected key transaction features and standardized numerical fields.
+2. Dimensionality Reduction
+- Applied PCA to project the dataset into two components for visualization and clustering.
+- PC1 and PC2 capture the dominant behavioral variance.
+3. Clustering
+- Ran clustering (e.g., KMeans) on the PCA space to group transactions into behavioral clusters.
+- Assigned each record a Cluster ID, which became the basis for stratified sampling.
+4. Consolidation Strategy
+- Built the consolidated file using stratified sampling across clusters, ensuring proportional representation.
+- Included additional sampling axes such as routing bucket and debit/credit flag to maintain diversity within clusters.
+5. Validation
+To confirm whether all the clusters were represented, several checks were performed:
+- Cluster Proportion Comparison — verified that cluster distributions match between full and consolidated datasets.
+- Density Comparison — used 2D KDE plots to ensure the consolidated file covers the same PCA regions.
+- Decision Tree Check — trained a model to predict clusters and confirmed that decision boundaries remain consistent.
+- Visual Overlays — compared full vs consolidated structure in PCA space.
+6. Output
+The final consolidated file preserves the structure, diversity, and behavioral patterns of the full ACH dataset while being significantly smaller and easier to use for testing and analysis.
 
 #### Results
-What did your research find?
-- A single NACHA‑compliant ACH file can be constructed that represents all major transaction categories and edge cases.
-- Diversity : The file includes several SEC codes (PPD, WEB, TEL, BOC, CCD, RCK) and different routing numbers, so it covers a range of payment scenarios and institutions.
-- Debit‑heavy imbalance: All transactions in the sample were debits. No credits appeared, which means the dataset does not yet represent the full variety of ACH activity.
-- Cluster redundancy: Some clusters overlapped, with multiple groups representing debit transactions that differed mainly by routing number. This reduces the uniqueness of the clusterrs
-- File integrity: Transaction totals matched correctly in batch and file control records, confirming that the NACHA structure was followed
+- A representative consolidated ACH file can be constructed that preserves the major behavioral patterns and structural diversity of the full dataset while remaining NACHA‑compliant.
+- Diversity:
+The consolidated file includes multiple routing buckets, transaction codes, and a balanced spread across behavioral clusters, ensuring coverage of a wide range of payment scenarios and institutions.
+- Cluster coverage:
+All clusters from the full dataset appear in the consolidated file, and cluster proportions remain broadly consistent. Cluster shapes in PCA space are also preserved, indicating that the consolidation maintains underlying behavioral structure.
+- Debit/Credit imbalance:
+The consolidated sample reflects the natural skew of the original dataset, which is heavily debit‑dominant. Debit transactions remain under‑represented, suggesting the need for targeted sampling if additional coverage is required.
+- Cluster redundancy:
+Some clusters show partial overlap, especially among debit‑heavy groups that differ mainly by routing bucket. This indicates that certain behavioral patterns are similar and may not require separate representation in future consolidation iterations.
+- File integrity:
+All batch and file control totals match expected NACHA requirements. Record counts, hash totals, and debit/credit amounts reconcile correctly, confirming that the consolidated file is structurally valid and ready for downstream ACH testing.
+- File size constraints
+Early experiments used 5000 line ACH files, but this volume caused significant slowdowns during PCA, clustering, and visualization. To maintain performance and ensure reproducible analysis, the working file size was reduced to 1000 ACH records per file
 
 
 #### Next steps
-- Expand dataset coverage with additional ACH samples from diverse sources.
-- Explore addditional clustering methods (DBSCAN, Gaussian Mixture Models) for finer redundancy detection.
-- Develop dashboards to visualize coverage and diversity.
+- Improve credit representation
+Add targeted sampling so credit transactions appear in the consolidated file and better reflect real ACH activity.
+- Refine clustering
+Adjust clustering parameters by including additional ACH file features like SEC code, transaction code groupings, etc. to reduce overlap among transaction groups and improve the uniqueness of behavioral segments.
+- Automate the consolidation pipeline
+Package PCA, clustering, sampling, and validation into a reproducible workflow for consistent future generation.
 
 
 #### Outline of project
-- Program to generate synthetic ACH file
+- Program to generate synthetic ACH files
 https://github.com/rgadicharla/MLPortfolio/blob/main/CapstoneProject/SampleACHFileGenerator.ipynb
 
 - Source program used for analysis
-https://github.com/rgadicharla/MLPortfolio/blob/main/CapstoneProject/CapstoneProject_FirstDraft.ipynb
+https://github.com/rgadicharla/MLPortfolio/blob/main/CapstoneProject/UnifiedACHFileGenerator.ipynb
 
 ##### Contact and Further Information
+
+- Ramya Gadicharla
+ ramya.sameera@gmail.com
+
